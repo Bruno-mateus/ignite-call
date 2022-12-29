@@ -4,6 +4,7 @@ import { Form, FormAnotation } from './styles'
 import { ArrowRight } from 'phosphor-react'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
+import { zodResolver } from '@hookform/resolvers/zod'
 
 export function ClaimUsernameForm() {
   const claimUserNameFormSchema = z.object({
@@ -24,7 +25,9 @@ export function ClaimUsernameForm() {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<ClaimUserNameFormData>()
+  } = useForm<ClaimUserNameFormData>({
+    resolver: zodResolver(claimUserNameFormSchema),
+  })
 
   function handlePreRegister(data: ClaimUserNameFormData) {
     console.log(data)
