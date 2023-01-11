@@ -1,4 +1,4 @@
-import { Box, styled } from '@ignite-ui/react'
+import { Box, Text, styled } from '@ignite-ui/react'
 
 export const Form = styled(Box, {
   marginTop: '$4',
@@ -17,4 +17,7 @@ export const FormAnotation = styled('div', {
   [`>${Text}`]: {
     color: '$gray400',
   },
+})
+export const FormError = styled(Text, {
+  color: '#f75a68 !important',
 })
