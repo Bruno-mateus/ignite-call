@@ -12,6 +12,7 @@ export async function Handle(req:NextApiRequest, res:NextApiResponse){
         req,
         buildNextAuthOptions
     })
+    
     return res.json({
         session
     })
