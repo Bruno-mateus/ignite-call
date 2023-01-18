@@ -58,7 +58,9 @@ export default function ConnecetCalendar() {
           </AuthError>
         )}
 
-        <Button disabled={!isSignedIn}>
+        <Button disabled={!isSignedIn} onClick={()=>{
+          location.href="/register/time-intervals"
+        }}>
           Próximo passo
           <ArrowRight />
         </Button>
