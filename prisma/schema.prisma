@@ -6,31 +6,30 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "mongodb"
   url      = env("DATABASE_URL")
 }
 
 model User {
-  id       String  @id @default(uuid())
-  name     String
-  username String  @unique
-  email    String? @unique
-
+  id         String  @id @default(auto()) @map("_id") @db.ObjectId
+  name       String
+  username   String  @unique
+  email      String? @unique
+  bio        String?
   avatar_url String?
 
-  accounts Account[]
-  sessions Session[]
+  accounts         Account[]
+  sessions         Session[]
   UserTimeInterval UserTimeInterval[]
-  
-  createdAt        DateTime           @default(now())
 
+  createdAt DateTime @default(now())
 
   @@map("users")
 }
 
 model Account {
-  id                 String  @id @default(cuid())
-  user_id            String
+  id                 String  @id @default(auto()) @map("_id") @db.ObjectId
+  user_id            String  @db.ObjectId
   type               String
   provider           String
   provider_accountId String
@@ -49,9 +48,9 @@ model Account {
 }
 
 model Session {
-  id            String   @id @default(cuid())
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
   session_token String   @unique
-  user_id       String
+  user_id       String   @db.ObjectId
   expires       DateTime
   user          User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
@@ -59,12 +58,12 @@ model Session {
 }
 
 model UserTimeInterval {
-  id                    String @id @default(uuid())
+  id                    String @id @default(auto()) @map("_id") @db.ObjectId
   week_day              Int
   time_start_in_minutes Int
-
-  user    User   @relation(fields: [user_id], references: [id])
-  user_id String
+  time_end_in_minutes   Int
+  user                  User   @relation(fields: [user_id], references: [id])
+  user_id               String @db.ObjectId
 
   @@map("user_time_intervals")
 }

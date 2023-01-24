@@ -2,13 +2,14 @@ import NextAuth, { NextAuthOptions } from 'next-auth'
 
 import { PrismaAdpter } from '../../../lib/auth/prisma-adapater'
 
-import { NextApiRequest, NextApiResponse } from 'next'
+import { NextApiRequest, NextApiResponse, NextPageContext } from 'next'
 
 import GoogleProvider, { GoogleProfile } from 'next-auth/providers/google'
+import { userInfo } from 'os'
 
 export function buildNextAuthOptions(
-  req: NextApiRequest,
-  res: NextApiResponse,
+  req: NextApiRequest | NextPageContext['req'],
+  res: NextApiResponse | NextPageContext['res'],
 ): NextAuthOptions {
   return {
     adapter: PrismaAdpter(req, res),
@@ -38,6 +39,7 @@ export function buildNextAuthOptions(
     ],
     callbacks: {
       async signIn({ account }) {
+      
         if (
           !account?.scope?.includes('https://www.googleapis.com/auth/calendar')
         ) {
@@ -47,6 +49,7 @@ export function buildNextAuthOptions(
         return true
       },
       async session({ session, user }) {
+      
         return {
           ...session,
           user,

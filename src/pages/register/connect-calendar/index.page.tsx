@@ -15,6 +15,7 @@ export default function ConnecetCalendar() {
   const isSignedIn = session.status === 'authenticated'
 
   async function handleConnectCallendar() {
+    
     await signIn('google')
   }
   return (

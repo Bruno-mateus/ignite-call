@@ -23,6 +23,8 @@ import { getDays } from '../../../utils/get-week-days'
 import { convertTimeStringToMinutes } from '../../../utils/get-time-in-minutes'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { ArrowRight } from 'phosphor-react'
+import { api } from '../../../lib/axios'
+import { AxiosError } from 'axios'
 
 const timeIntervalsFormSchema = z.object({
   intervals: z
@@ -91,11 +93,22 @@ export default function TimeIntervals() {
     control,
     name: 'intervals',
   })
-  const intervals = watch('intervals')
+  const intervalsWatch = watch('intervals')
 
   async function handleSetTimeIntervals(data: any) {
-    const formData = data as TimeIntervalFormOutput
-    console.log(formData)
+    
+    const {intervals} = data as TimeIntervalFormOutput
+    try{
+      await api.post('/users/time-intervals', intervals)
+    }catch(err){
+      if(err instanceof AxiosError && err?.response?.data?.message){
+        alert(err)
+      }
+    }finally{
+      location.href="/register/update-profile"
+    }
+ 
+
   }
 
   const weekDays = getDays()
@@ -138,14 +151,14 @@ export default function TimeIntervals() {
                     size={'sm'}
                     type="time"
                     step={60}
-                    disabled={intervals[index].enabled === false}
+                    disabled={intervalsWatch[index].enabled === false}
                     {...register(`intervals.${index}.startTime`)}
                   />
                   <TextInput
                     size={'sm'}
                     type="time"
                     step={60}
-                    disabled={intervals[index].enabled === false}
+                    disabled={intervalsWatch[index].enabled === false}
                     {...register(`intervals.${index}.endTime`)}
                   />
                 </IntevalInputs>
