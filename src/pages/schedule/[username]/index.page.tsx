@@ -3,6 +3,7 @@ import { GetStaticPaths, GetStaticProps } from "next";
 import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
 import { prisma } from "../../../lib/prisma";
 import { CalendarStep } from "./ScheduleForm/CalendarStep";
+import { ConfirmStep } from "./ScheduleForm/ConfirmStep";
 import { Container, UserHeader } from "./styles";
 
 interface ScheduleProps{
@@ -23,7 +24,7 @@ export default function Schedule({user}:ScheduleProps){
                 <Heading>{user.name}</Heading>
                 <Text>{user.bio}</Text>
             </UserHeader>
-            <CalendarStep/>
+            <ConfirmStep/>
         </Container>
     )
 }
