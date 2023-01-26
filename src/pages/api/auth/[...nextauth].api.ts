@@ -5,7 +5,7 @@ import { PrismaAdpter } from '../../../lib/auth/prisma-adapater'
 import { NextApiRequest, NextApiResponse, NextPageContext } from 'next'
 
 import GoogleProvider, { GoogleProfile } from 'next-auth/providers/google'
-import { userInfo } from 'os'
+
 
 export function buildNextAuthOptions(
   req: NextApiRequest | NextPageContext['req'],
