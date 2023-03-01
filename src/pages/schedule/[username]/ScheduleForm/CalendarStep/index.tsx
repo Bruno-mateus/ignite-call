@@ -1,30 +1,83 @@
+import { useQuery } from "@tanstack/react-query";
+import dayjs from "dayjs";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 import { Calendar } from "../../../../../components/Calendar";
-import { Container, TimePickerHeader, TimePickerList, TimePicker, TimePickerButton } from "./styles";
+import { api } from "../../../../../lib/axios";
+import { Container, TimePickerHeader, TimePickerList, TimePicker, TimePickerItem } from "./styles";
 
-export function CalendarStep(){
+interface Availability {
+    possibleTimes:number[]
+    availablesTimes:number[]
+    blockedTimes:number[]
+}
+
+interface CaledarTimeProps{
+    onSelectDateTime: (hour:Date)=>void
+}
+
+export function CalendarStep({onSelectDateTime}:CaledarTimeProps){
+    const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+    
+    const isDateSelected = selectedDate != null
+    const weekDay = selectedDate ? dayjs(selectedDate).format("dddd") : null;
+    const describedDate = selectedDate?dayjs(selectedDate).format("DD[ de ]MMMM"):null;
+    const router = useRouter();
+
+    const username = String(router.query.username);
+    const isSelectedDate = selectedDate?dayjs(selectedDate).format("YYYY-MM-DD"):null
+
+    const {data:availability} = useQuery<Availability>(
+        ["availability",isSelectedDate],
+        async ()=>{
+           const res = await api.get(`/users/${username}/availability`,{
+                params:{
+                    date:isSelectedDate
+                    
+                }
+            })
+            
+            return res.data
+            
+        },{
+            enabled:!!selectedDate
+        }
+        )
+
+        function handleSelectDateAndTime(hour:number){
+            //pega data e horario selecionado
+            const dateWithTime = dayjs(selectedDate).set('hour',hour).startOf('hour').toDate();
+            onSelectDateTime(dateWithTime)
+        }
+        
     return(
-        <Container isTimePickerOpen={true}>
-            <Calendar/>
-            <TimePicker>
+        <Container isTimePickerOpen={isDateSelected}>
+            <Calendar selectedDate={selectedDate} onDateSelected={setSelectedDate}/>
+            <TimePicker className="timerPicker">
             <TimePickerList>
                 <TimePickerHeader>
-                terça-feira, <span>20 de setembro</span>
+                {weekDay}, <span>{describedDate}</span>
                 </TimePickerHeader>
-                <TimePickerButton>
-                    13:00
-                </TimePickerButton>
-                <TimePickerButton>
-                    14:00
-                </TimePickerButton>
-                <TimePickerButton>
-                    15:00
-                </TimePickerButton>
-                <TimePickerButton>
-                    16:00
-                </TimePickerButton>
-                <TimePickerButton>
-                    17:00
-                </TimePickerButton>
+                {
+                    availability?.possibleTimes.map(hour=>{
+                        console.log(availability.blockedTimes)
+                        return(
+                            <TimePickerItem 
+                                key={hour}
+                                 disabled={
+                                !availability?.availablesTimes.includes(hour)
+                                }
+                                onClick={()=>{
+                                    handleSelectDateAndTime(hour)
+                                }}
+                                >
+                                {
+                                    String(hour).padStart(2,"0")+":00h" 
+                                }
+                            </TimePickerItem>
+                        )
+                    })
+                }
             </TimePickerList>
             </TimePicker>
 
