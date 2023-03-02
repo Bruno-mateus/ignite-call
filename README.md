@@ -1,36 +1,49 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+🚀 Tecnologias
+Esse projeto foi desenvolvido com as seguintes tecnologias:
 
-## Getting Started
+React
+Next.js
+Typescript
+Node.js
+Prisma.io
+Google APIs
+Google Cloud Platform
+Docker
+Axios
+Next Seo
+Nookies
+React Hook Form
+Design System
+Stitches (CSS-in-JS)
+Phosphor icons
+ESLint
+Date-fns
+Zod
 
-First, run the development server:
+🔖 Projeto
+O projeto Ignite Call foi construído para agendamentos de compromissos a partir de um calendário com integração com o Google Agenda. O usuário pode se cadastrar no app a partir de sua conta do Google e indicar seus dias da semana e horários em que estará disponível para agendar compromissos. Todo agendamento cadastrado na aplicação tem integração com o Google Agenda, o que possibilita ao usuário verificar seus novos compromissos direto na plataforma do Google.
 
-```bash
-npm run dev
-# or
-yarn dev
-```
+💻 Testando a aplicação localmente
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Para rodar a aplicação será necessária a conexão com um banco de dados local ou container Docker e integrado com a ferramenta Prisma.io. Além da criação do projeto no Google Cloud Platform para coletar as credenciais necessárias para login e integração com a plataforma Google que constam em um arquivo .env na raiz do projeto Este arquivo também deverá conter a URL de conexão que deverá ser utilizada para a conexão do Prisma com o banco de dados.
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+exemplo do arquivo .env:
+DATABASE_URL=
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+# Google oAuth
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+GOOGLE_CLIENT_ID=
+GOOGLE_CLIENT_SECRET=
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+NEXTAUTH_SECRET=
 
-## Learn More
 
-To learn more about Next.js, take a look at the following resources:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+# Clone this project
+$ git clone git@github.com:diegoalmda/nextjs-ignite-call.git
+# Install dependencies
+$ npm install
+# Run the project
+$ npm run dev
+# The server will initialize in the <http://localhost:3000>
+Testar o projeto em funcionamento -> Ignite Call

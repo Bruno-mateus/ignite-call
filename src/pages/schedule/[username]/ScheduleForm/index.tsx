@@ -5,7 +5,7 @@ export function ScheduleForm(){
     const [dateAndTimeSelected, setDateAndTimeSelected] = useState<Date | null>()
 
     if(dateAndTimeSelected) {
-        return <ConfirmStep scheduleDateAndTime={dateAndTimeSelected}/>
+        return <ConfirmStep scheduleDateAndTime={dateAndTimeSelected} closeConfirmStep={setDateAndTimeSelected}/>
     }
     
     return <CalendarStep onSelectDateTime={setDateAndTimeSelected}/>
