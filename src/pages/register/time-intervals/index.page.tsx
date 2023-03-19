@@ -1,22 +1,22 @@
 import {
-  Button,
-  Checkbox,
-  Heading,
-  MultiStep,
-  Text,
-  TextInput,
+    Button,
+    Checkbox,
+    Heading,
+    MultiStep,
+    Text,
+    TextInput,
 } from '@ignite-ui/react'
 import { Container, Header } from '../styles'
 
 import * as z from 'zod'
 
 import {
-  FormError,
-  IntervalContainer,
-  IntervalDay,
-  IntevalBox,
-  IntevalInputs,
-  IntevalItem,
+    FormError,
+    IntervalContainer,
+    IntervalDay,
+    IntevalBox,
+    IntevalInputs,
+    IntevalItem,
 } from './styles'
 import { useForm, useFieldArray, Controller } from 'react-hook-form'
 import { getDays } from '../../../utils/get-week-days'
@@ -25,161 +25,162 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { ArrowRight } from 'phosphor-react'
 import { api } from '../../../lib/axios'
 import { AxiosError } from 'axios'
-import { NextSeo } from 'next-seo/lib/meta/nextSEO'
+import { NextSeo } from 'next-seo'
+
 
 const timeIntervalsFormSchema = z.object({
-  intervals: z
-    .array(
-      z.object({
-        weekDay: z.number().min(0).max(6),
-        enabled: z.boolean(),
-        startTime: z.string(),
-        endTime: z.string(),
-      }),
-    )
-    .length(7)
-    .transform((intervals) => intervals.filter((interval) => interval.enabled))
-    .refine((intervals) => intervals.length > 0, {
-      message: 'Selecione pelo menos um dia da semana ',
-    })
-    .transform((intervals) =>
-      intervals.map((interval) => {
-        return {
-          weekday: interval.weekDay,
-          startTimeInMinutes: convertTimeStringToMinutes(interval.startTime),
-          endTimeInMinutes: convertTimeStringToMinutes(interval.endTime),
-        }
-      }),
-    )
-    .refine(
-      (intervals) => {
-        return intervals.every(
-          (interval) =>
-            interval.endTimeInMinutes - 60 >= interval.startTimeInMinutes,
+    intervals: z
+        .array(
+            z.object({
+                weekDay: z.number().min(0).max(6),
+                enabled: z.boolean(),
+                startTime: z.string(),
+                endTime: z.string(),
+            }),
         )
-      },
-      {
-        message:
-          'O horário de término deve ser pelo menos 1h maior que o de inicio',
-      },
-    ),
+        .length(7)
+        .transform((intervals) => intervals.filter((interval) => interval.enabled))
+        .refine((intervals) => intervals.length > 0, {
+            message: 'Selecione pelo menos um dia da semana ',
+        })
+        .transform((intervals) =>
+            intervals.map((interval) => {
+                return {
+                    weekday: interval.weekDay,
+                    startTimeInMinutes: convertTimeStringToMinutes(interval.startTime),
+                    endTimeInMinutes: convertTimeStringToMinutes(interval.endTime),
+                }
+            }),
+        )
+        .refine(
+            (intervals) => {
+                return intervals.every(
+                    (interval) =>
+                        interval.endTimeInMinutes - 60 >= interval.startTimeInMinutes,
+                )
+            },
+            {
+                message:
+                    'O horário de término deve ser pelo menos 1h maior que o de inicio',
+            },
+        ),
 })
 
 type TimeIntervalFormInput = z.input<typeof timeIntervalsFormSchema>
 type TimeIntervalFormOutput = z.output<typeof timeIntervalsFormSchema>
 
 export default function TimeIntervals() {
-  const {
-    register,
-    handleSubmit,
-    control,
-    watch,
-    formState: { isSubmitting, errors },
-  } = useForm<TimeIntervalFormInput>({
-    resolver: zodResolver(timeIntervalsFormSchema),
-    defaultValues: {
-      intervals: [
-        { weekDay: 0, enabled: false, startTime: '08:00', endTime: '18:00' },
-        { weekDay: 1, enabled: false, startTime: '08:00', endTime: '18:00' },
-        { weekDay: 2, enabled: true, startTime: '08:00', endTime: '18:00' },
-        { weekDay: 3, enabled: true, startTime: '08:00', endTime: '18:00' },
-        { weekDay: 4, enabled: true, startTime: '08:00', endTime: '18:00' },
-        { weekDay: 5, enabled: true, startTime: '08:00', endTime: '18:00' },
-        { weekDay: 6, enabled: true, startTime: '08:00', endTime: '18:00' },
-      ],
-    },
-  })
+    const {
+        register,
+        handleSubmit,
+        control,
+        watch,
+        formState: { isSubmitting, errors },
+    } = useForm<TimeIntervalFormInput>({
+        resolver: zodResolver(timeIntervalsFormSchema),
+        defaultValues: {
+            intervals: [
+                { weekDay: 0, enabled: false, startTime: '08:00', endTime: '18:00' },
+                { weekDay: 1, enabled: false, startTime: '08:00', endTime: '18:00' },
+                { weekDay: 2, enabled: true, startTime: '08:00', endTime: '18:00' },
+                { weekDay: 3, enabled: true, startTime: '08:00', endTime: '18:00' },
+                { weekDay: 4, enabled: true, startTime: '08:00', endTime: '18:00' },
+                { weekDay: 5, enabled: true, startTime: '08:00', endTime: '18:00' },
+                { weekDay: 6, enabled: true, startTime: '08:00', endTime: '18:00' },
+            ],
+        },
+    })
 
-  const { fields } = useFieldArray({
-    control,
-    name: 'intervals',
-  })
-  const intervalsWatch = watch('intervals')
+    const { fields } = useFieldArray({
+        control,
+        name: 'intervals',
+    })
+    const intervalsWatch = watch('intervals')
 
-  async function handleSetTimeIntervals(data: any) {
-    
-    const {intervals} = data as TimeIntervalFormOutput
-    try{
-      await api.post('/users/time-intervals', intervals)
-    }catch(err){
-      if(err instanceof AxiosError && err?.response?.data?.message){
-        alert(err)
-      }
-    }finally{
-      location.href="/register/update-profile"
+    async function handleSetTimeIntervals(data: any) {
+
+        const { intervals } = data as TimeIntervalFormOutput
+        try {
+            await api.post('/users/time-intervals', intervals)
+        } catch (err) {
+            if (err instanceof AxiosError && err?.response?.data?.message) {
+                alert(err)
+            }
+        } finally {
+            location.href = "/register/update-profile"
+        }
+
+
     }
- 
 
-  }
-
-  const weekDays = getDays()
-  return (
-    <Container>
-    <NextSeo
-      title="Selecione um horário | Ignite Call"
-      description="Selecione um horário para o agendamento"
-      noindex
-    />
-      <Header>
-        <Heading as="strong">Conecte sua agenda!</Heading>
-        <Text>
-          Conecte o seu calendário para verificar automaticamente as horas
-          ocupadas e os novos eventos à medida em que são agendados.
-        </Text>
-        <MultiStep size={4} currentStep={3} />
-      </Header>
-      <IntevalBox as="form" onSubmit={handleSubmit(handleSetTimeIntervals)}>
-        <IntervalContainer>
-          {fields.map((field, index) => {
-            return (
-              <IntevalItem key={field.id}>
-                <IntervalDay>
-                  <Controller
-                    name={`intervals.${index}.enabled`}
-                    control={control}
-                    render={({ field }) => {
-                      return (
-                        <Checkbox
-                          onCheckedChange={(eventCheck) => {
-                            // retorna true ou false
-                            // por padrão retornaria "indeterminate"
-                            field.onChange(eventCheck === true)
-                          }}
-                          checked={field.value}
-                        />
-                      )
-                    }}
-                  />
-                  <Text>{weekDays[field.weekDay]}</Text>
-                </IntervalDay>
-                <IntevalInputs>
-                  <TextInput
-                    size={'sm'}
-                    type="time"
-                    step={60}
-                    disabled={intervalsWatch[index].enabled === false}
-                    {...register(`intervals.${index}.startTime`)}
-                  />
-                  <TextInput
-                    size={'sm'}
-                    type="time"
-                    step={60}
-                    disabled={intervalsWatch[index].enabled === false}
-                    {...register(`intervals.${index}.endTime`)}
-                  />
-                </IntevalInputs>
-              </IntevalItem>
-            )
-          })}
-        </IntervalContainer>
-        {errors.intervals?.message && (
-          <FormError>{errors.intervals?.message}</FormError>
-        )}
-        <Button type="submit" disabled={isSubmitting}>
-          Proximo passo
-          <ArrowRight />
-        </Button>
-      </IntevalBox>
-    </Container>
-  )
+    const weekDays = getDays()
+    return (
+        <Container>
+            <NextSeo
+                title="Selecione um horário | Ignite Call"
+                description="Selecione um horário para o agendamento"
+                noindex
+            />
+            <Header>
+                <Heading as="strong">Conecte sua agenda!</Heading>
+                <Text>
+                    Conecte o seu calendário para verificar automaticamente as horas
+                    ocupadas e os novos eventos à medida em que são agendados.
+                </Text>
+                <MultiStep size={4} currentStep={3} />
+            </Header>
+            <IntevalBox as="form" onSubmit={handleSubmit(handleSetTimeIntervals)}>
+                <IntervalContainer>
+                    {fields.map((field, index) => {
+                        return (
+                            <IntevalItem key={field.id}>
+                                <IntervalDay>
+                                    <Controller
+                                        name={`intervals.${index}.enabled`}
+                                        control={control}
+                                        render={({ field }) => {
+                                            return (
+                                                <Checkbox
+                                                    onCheckedChange={(eventCheck) => {
+                                                        // retorna true ou false
+                                                        // por padrão retornaria "indeterminate"
+                                                        field.onChange(eventCheck === true)
+                                                    }}
+                                                    checked={field.value}
+                                                />
+                                            )
+                                        }}
+                                    />
+                                    <Text>{weekDays[field.weekDay]}</Text>
+                                </IntervalDay>
+                                <IntevalInputs>
+                                    <TextInput
+                                        size={'sm'}
+                                        type="time"
+                                        step={60}
+                                        disabled={intervalsWatch[index].enabled === false}
+                                        {...register(`intervals.${index}.startTime`)}
+                                    />
+                                    <TextInput
+                                        size={'sm'}
+                                        type="time"
+                                        step={60}
+                                        disabled={intervalsWatch[index].enabled === false}
+                                        {...register(`intervals.${index}.endTime`)}
+                                    />
+                                </IntevalInputs>
+                            </IntevalItem>
+                        )
+                    })}
+                </IntervalContainer>
+                {errors.intervals?.message && (
+                    <FormError>{errors.intervals?.message}</FormError>
+                )}
+                <Button type="submit" disabled={isSubmitting}>
+                    Proximo passo
+                    <ArrowRight />
+                </Button>
+            </IntevalBox>
+        </Container>
+    )
 }

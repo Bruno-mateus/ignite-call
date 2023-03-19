@@ -7,59 +7,59 @@ import { ScheduleForm } from "./ScheduleForm";
 
 import { Container, UserHeader } from "./styles";
 
-interface ScheduleProps{
-    user:{
-        name:string
-        bio:string
-        avatarUrl:string
+interface ScheduleProps {
+    user: {
+        name: string
+        bio: string
+        avatarUrl: string
     }
 }
 
-export default function Schedule({user}:ScheduleProps){
-    return(
+export default function Schedule({ user }: ScheduleProps) {
+    return (
         <Container>
-              <NextSeo title={`Agendar com ${user.name} | Ignite Call`} />
+            <NextSeo title={`Agendar com ${user.name} | Ignite Call`} />
             <UserHeader>
-                <Avatar 
-                src={user.avatarUrl}
+                <Avatar
+                    src={user.avatarUrl}
                 />
                 <Heading>{user.name}</Heading>
                 <Text>{user.bio}</Text>
             </UserHeader>
-         <ScheduleForm/>
+            <ScheduleForm />
         </Container>
     )
 }
 
-export const getStaticPaths:GetStaticPaths = async () => {
-    return{
-        paths:[],
-        fallback:"blocking"
+export const getStaticPaths: GetStaticPaths = async () => {
+    return {
+        paths: [],
+        fallback: "blocking"
     }
 }
 
-export const getStaticProps:GetStaticProps = async ({params}) => {
+export const getStaticProps: GetStaticProps = async ({ params }) => {
     const username = String(params?.username);
     const user = await prisma.user.findUnique({
-        where:{
+        where: {
             username
         }
     });
 
-    if(!user){
+    if (!user) {
         return {
             notFound: true
         }
     }
 
-    return{
-        props:{
-            user:{
-                name:user.name,
-                bio:user.bio,
-                avatarUrl:user.avatar_url
+    return {
+        props: {
+            user: {
+                name: user.name,
+                bio: user.bio,
+                avatarUrl: user.avatar_url
             }
         },
-        revalidate:60*60*24
+        revalidate: 60 * 60 * 24
     }
 }

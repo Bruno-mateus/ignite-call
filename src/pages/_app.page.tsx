@@ -9,27 +9,27 @@ import { DefaultSeo } from 'next-seo'
 globalStyles()
 
 export default function App({
-  Component,
-  pageProps: { session, ...pageProps },
+    Component,
+    pageProps: { session, ...pageProps },
 }: AppProps) {
-  return (
-    <QueryClientProvider client={queryClient}>
-    <SessionProvider session={session}>
-    <DefaultSeo
-          openGraph={{
-            type: 'website',
-            locale: 'pt-BR',
-            url: 'https://www.url.ie/',
-            siteName: 'ignite call',
-          }}
-          twitter={{
-            handle: '@handle',
-            site: '@site',
-            cardType: 'summary_large_image',
-          }}
-        />
-      <Component {...pageProps} />
-    </SessionProvider>
-    </QueryClientProvider>
-  )
+    return (
+        <QueryClientProvider client={queryClient}>
+            <SessionProvider session={session}>
+                <DefaultSeo
+                    openGraph={{
+                        type: 'website',
+                        locale: 'pt-BR',
+                        url: 'https://www.url.ie/',
+                        siteName: 'ignite call',
+                    }}
+                    twitter={{
+                        handle: '@handle',
+                        site: '@site',
+                        cardType: 'summary_large_image',
+                    }}
+                />
+                <Component {...pageProps} />
+            </SessionProvider>
+        </QueryClientProvider>
+    )
 }

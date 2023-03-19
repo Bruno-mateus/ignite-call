@@ -2,11 +2,11 @@ import dayjs from "dayjs";
 import { google } from "googleapis";
 import { prisma } from "./prisma";
 
-export async function getGoogleOAuthToken(userId:string){
+export async function getGoogleOAuthToken(userId: string) {
     const account = await prisma.account.findFirstOrThrow({
-        where:{
-            provider:"google",
-            user_id:userId
+        where: {
+            provider: "google",
+            user_id: userId
         }
     })
     const auth = new google.auth.OAuth2(
@@ -15,19 +15,19 @@ export async function getGoogleOAuthToken(userId:string){
     )
 
     auth.setCredentials({
-        access_token:account.access_token,
-        refresh_token:account.refresh_token,
-        expiry_date:account.expires_at? account.expires_at * 1000:null
+        access_token: account.access_token,
+        refresh_token: account.refresh_token,
+        expiry_date: account.expires_at ? account.expires_at * 1000 : null
     })
 
-    if(!account.expires_at){
+    if (!account.expires_at) {
         return auth
     }
 
-    const isTokenExpired = dayjs(account.expires_at*1000).isBefore(new Date())
-    
-    if(isTokenExpired){
-        const {credentials} = await auth.refreshAccessToken()
+    const isTokenExpired = dayjs(account.expires_at * 1000).isBefore(new Date())
+
+    if (isTokenExpired) {
+        const { credentials } = await auth.refreshAccessToken()
         const {
             access_token,
             expiry_date,
@@ -38,12 +38,12 @@ export async function getGoogleOAuthToken(userId:string){
         } = credentials
 
         await prisma.account.update({
-            where:{
-                id:account.id
+            where: {
+                id: account.id
             },
-            data:{
+            data: {
                 access_token,
-                expires_at:expiry_date?Math.floor(expiry_date/1000):null,
+                expires_at: expiry_date ? Math.floor(expiry_date / 1000) : null,
                 id_token,
                 refresh_token,
                 scope,
@@ -55,7 +55,7 @@ export async function getGoogleOAuthToken(userId:string){
             refresh_token,
             expiry_date
         })
-    
+
     }
     return auth
 }
