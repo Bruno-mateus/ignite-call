@@ -6,6 +6,7 @@ import { signIn, useSession } from 'next-auth/react'
 // import { api } from '../../../lib/axios'
 import { AuthError, ConnectBox, ConnectItem } from './styles'
 import { useRouter } from 'next/router'
+import { NextSeo } from 'next-seo'
 
 export default function ConnecetCalendar() {
   const router = useRouter()
@@ -20,6 +21,11 @@ export default function ConnecetCalendar() {
   }
   return (
     <Container>
+    <NextSeo
+      title="Contecte seu calendário | Ignite Call"
+      description="Conecte seu calendário e permita que as pessoas marquem agendamentos no seu tempo livre."
+      noindex
+    />
       <Header>
         <Heading as="strong">Conecte sua agenda!</Heading>
         <Text>

@@ -25,6 +25,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { ArrowRight } from 'phosphor-react'
 import { api } from '../../../lib/axios'
 import { AxiosError } from 'axios'
+import { NextSeo } from 'next-seo/lib/meta/nextSEO'
 
 const timeIntervalsFormSchema = z.object({
   intervals: z
@@ -114,6 +115,11 @@ export default function TimeIntervals() {
   const weekDays = getDays()
   return (
     <Container>
+    <NextSeo
+      title="Selecione um horário | Ignite Call"
+      description="Selecione um horário para o agendamento"
+      noindex
+    />
       <Header>
         <Heading as="strong">Conecte sua agenda!</Heading>
         <Text>

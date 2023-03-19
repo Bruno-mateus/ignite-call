@@ -12,6 +12,7 @@ import { GetServerSideProps } from 'next'
 import { unstable_getServerSession } from 'next-auth/next'
 import { buildNextAuthOptions } from '../../api/auth/[...nextauth].api'
 import { api } from '../../../lib/axios'
+import { NextSeo } from 'next-seo'
 
 export default function UpdateProfile() {
   const UpdateProfileFormSchema = z.object({
@@ -43,7 +44,12 @@ export default function UpdateProfile() {
 
   return (
     <Container>
+          <NextSeo
+      title="Atualizando informações| Ignite Call"
+      noindex
+  />
       <Header>
+
         <Heading as="strong">Bem-vindo ao Ignite Call!</Heading>
         <Text>
           Precisamos de algumas informações para criar seu perfil! Ah, você pode

@@ -60,19 +60,17 @@ export default async function handle(
             user_id:user?.id,
             date:{
                 //great than or equal
-                gte:referenceDate.set('hour',startHour).toDate(),
+                gte:referenceDate.startOf('day').toDate(),
                 //less than or equal
-                lte:referenceDate.set('hour',endHour).toDate()
+                lte:referenceDate.endOf('day').toDate()
             }
         }
     })
   
-    const availablesTimes = possibleTimes.filter(time=>{
-        const isTimeBlocked = blockedTimes.some(blockedTime=>blockedTime.date.getHours() === time)
-        const isTimeInPast = referenceDate.set('hour',time).isBefore(new Date())
-        return !isTimeBlocked && !isTimeInPast
-    })
-  
+    const availablesTimes = blockedTimes.map((schedules) => {
+        return schedules.date
+      })
+      
     return res.json({
         possibleTimes,
         availablesTimes,

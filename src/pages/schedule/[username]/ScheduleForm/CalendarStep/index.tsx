@@ -27,6 +27,7 @@ export function CalendarStep({onSelectDateTime}:CaledarTimeProps){
     const username = String(router.query.username);
     const isSelectedDate = selectedDate?dayjs(selectedDate).format("YYYY-MM-DD"):null
 
+  
     const {data:availability} = useQuery<Availability>(
         ["availability",isSelectedDate],
         async ()=>{
@@ -43,6 +44,13 @@ export function CalendarStep({onSelectDateTime}:CaledarTimeProps){
             enabled:!!selectedDate
         }
         )
+
+        const unavailableTimes = availability?.availablesTimes.map(
+            (availableTime) => {
+              return dayjs(availableTime).get('hour')
+            },
+          )
+    
 
         function handleSelectDateAndTime(hour:number){
             //pega data e horario selecionado
@@ -65,7 +73,8 @@ export function CalendarStep({onSelectDateTime}:CaledarTimeProps){
                             <TimePickerItem 
                                 key={hour}
                                  disabled={
-                                !availability?.availablesTimes.includes(hour)
+                                    unavailableTimes?.includes(hour) ||
+                                    dayjs(selectedDate).set('hour', hour).isBefore(new Date())
                                 }
                                 onClick={()=>{
                                     handleSelectDateAndTime(hour)
